@@ -181,6 +181,7 @@ body {
 }
 .no-movies {
   padding: 20px 0;
-  font-size: 20px;
+  font-size: 30px;
   color: #6d6d6d;
+  text-align: center;
 }
