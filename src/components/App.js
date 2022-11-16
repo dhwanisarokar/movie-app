@@ -1,8 +1,9 @@
+import React from "react";
+import { data } from "../data";
 import MovieCard from "./MovieCard";
 import Navbar from "./Navbar";
-import { data } from "../data";
-import React from "react";
 import { addMovies, setShowFavorites } from "../actions";
+import { StoreContent } from "..";
 
 class App extends React.Component {
   componentDidMount() {
@@ -31,13 +32,13 @@ class App extends React.Component {
   };
 
   render() {
-    const { movies } = this.props.store.getState(); // { movies: {}, search: {} }
-    const { list, showFavorites, favorites } = movies;
-
+    const { movies, search } = this.props.store.getState(); // { movies: {}, search: {} }
+    const { list, showFavorites = [], favorites = [] } = movies;
     const displayMovies = showFavorites ? favorites : list;
+
     return (
       <div className="App">
-        <Navbar />
+        <Navbar search={search} />
         <div className="main">
           <div className="tabs">
             <div
@@ -54,17 +55,17 @@ class App extends React.Component {
             </div>
           </div>
           <div className="list">
-            {displayMovies.map((movie, index) => (
+            {displayMovies.map((movie) => (
               <MovieCard
                 movie={movie}
-                key={`movie-${index}`}
+                key={movie.imdbID}
                 dispatch={this.props.store.dispatch}
                 isFavourite={this.isMovieFavourite(movie)}
               />
             ))}
           </div>
           {displayMovies.length === 0 ? (
-            <div className="no-movies">No Favorites Movies :(</div>
+            <div className="no-movies">No Movies Found :(</div>
           ) : null}
         </div>
       </div>
@@ -72,4 +73,14 @@ class App extends React.Component {
   }
 }
 
-export default App;
+class AppWrapper extends React.Component {
+  render() {
+    return (
+      <StoreContent.Consumer>
+        {(store) => <App store={store} />}
+      </StoreContent.Consumer>
+    );
+  }
+}
+
+export default AppWrapper;
